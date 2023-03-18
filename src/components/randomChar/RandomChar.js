@@ -30,7 +30,7 @@ class RandomChar extends Component {
             char,               // = char : char
             loading: false,
             error: false
-        })   
+        })
     }
 
     onError = () => {
