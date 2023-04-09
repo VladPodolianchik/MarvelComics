@@ -132,7 +132,6 @@ class CharList extends Component {
             </div>
         )
     }
-
 }
 
 CharList.propTypes = {
