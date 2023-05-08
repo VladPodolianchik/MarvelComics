@@ -1,14 +1,16 @@
 import { lazy, Suspense } from "react";
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 
-// import {MainPage, ComicsPage, SingleComicPage} from '../pages';
+// import {MainPage, ComicsPage, SinglePage} from '../pages';
 import AppHeader from "../appHeader/AppHeader";
 import Spinner from "../spinner/Spinner";
 
 const Page404 = lazy(() => import('../pages/404'));
 const MainPage = lazy(() => import('../pages/MainPage'));
 const ComicsPage = lazy(() => import('../pages/ComicsPage'));
-const SingleComicPage = lazy(() => import('../pages/SingleComicPage'));
+const SinglePage = lazy(() => import('../pages/SinglePage'));
+const SingleCharacterLayout = lazy(() => import('../pages/SingleCharacterLayout/SingleCharacterLayout'));
+const SingleComicLayout = lazy(() => import('../pages/SingleComicLayout/SingleComicLayout'))
 
 const App = () => {
 
@@ -21,7 +23,8 @@ const App = () => {
                             <Routes>
                                 <Route path='/' element={<MainPage/>}/>
                                 <Route path='/comics' element={<ComicsPage/>}/>
-                                <Route path='/comics/:comicId' element={<SingleComicPage/>}/>  {/* comicId это ключ, название придумано*/}
+                                <Route path='/comics/:id' element={<SinglePage Component={SingleComicLayout} dataType='comic'/>}/>
+                                <Route path='/characters/:id' element={<SinglePage Component={SingleCharacterLayout} dataType='character'/>}/>
                                 <Route path="*" element={<Page404/>}/>
                             </Routes>
                         </Suspense> 
