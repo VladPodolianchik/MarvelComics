@@ -2,17 +2,15 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import useMarvelService from '../../services/MarvelService';
 import { Link } from 'react-router-dom';
+import setContent from '../../utils/setContent';
 
-import Spinner from '../spinner/Spinner';
-import ErrorMessage from '../errorMessage/ErrorMessage';
-import Skeleton from "../skeleton/Skeleton";
 import './charInfo.scss';
 
 const CharInfo = (props) => {
 
     const [char, setChar] = useState(null);      // null = false, !!!dont forget
 
-    const {loading, error, getCharacter, clearError} = useMarvelService(); 
+    const {getCharacter, clearError, process, setProcess} = useMarvelService(); 
 
     useEffect(() => {
         updateChar();
@@ -27,6 +25,7 @@ const CharInfo = (props) => {
         clearError();
         getCharacter(charId)
             .then(onCharLoaded)
+            .then(() => setProcess('confirmed'))  // setProcess('confirmed') был в hook.js, но т.к. операции у нас асинхронные, то <View char={char}/> начнет отрисовывать компонент без данных char, поэтому эта строка вручную устанавливает стейт когда нужно
     }
 
     const onCharLoaded = (char) => {
@@ -34,23 +33,24 @@ const CharInfo = (props) => {
         // setError(false);
     }
 
-    const skeleton = char || loading || error ? null : <Skeleton/>
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading ? <Spinner/> : null;
-    const content = !(loading || error || !char) ? <View char={char}/> : null;
+    // const skeleton = char || loading || error ? null : <Skeleton/>
+    // const errorMessage = error ? <ErrorMessage/> : null;
+    // const spinner = loading ? <Spinner/> : null;
+    // const content = !(loading || error || !char) ? <View char={char}/> : null;
 
     return (
         <div className="char__info">
-            {skeleton}
+            {/* {skeleton}
             {errorMessage}
             {spinner}
-            {content}
+            {content} */}
+            {setContent(process, View, char)}
         </div>
     )
 }
 
-const View = ({char}) => {
-    const {name, description, thumbnail, homepage, wiki, comics} = char;
+const View = ({data}) => {
+    const {name, description, thumbnail, homepage, wiki, comics} = data;
     let imgStyle = {objectFit : "cover"};
 
     if (thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
